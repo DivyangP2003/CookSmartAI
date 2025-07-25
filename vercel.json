@@ -1,7 +1,0 @@
-{
-    "functions": {
-        "/api/recipes/batch-update-ratings": {
-            "schedule": "0 11 * * *"
-        }
-    }
-}
