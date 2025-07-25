@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/recipes/batch-update-ratings?secret=cc2a3d26a4656c78ef948cc94db9a838689fe4acfd89582d2ed60ebd9ddc0fff",
-      "schedule": "45 11 * * *"
-    }
-  ]
-}
