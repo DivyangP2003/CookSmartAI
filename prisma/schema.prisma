@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  firstName String?
+  lastName  String?
+  email     String   @unique
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userRecipes    UserRecipe[]
+  globalRecipes  GlobalRecipe[]
+  userMealPlans  UserMealPlan[]
+  recipeRatings  RecipeRating[]
+
+  @@map("users")
+}
+
+model UserRecipe {
+  id           String   @id @default(cuid())
+  userId       String
+  title        String
+  description  String?
+  prepTime     String?
+  cookTime     String?
+  servings     Int?
+  difficulty   String?
+  ingredients  String[] // Array of strings
+  instructions String[] // Array of strings
+  tags         String[] // Array of strings
+  nutrition    Json?    // JSON object for nutrition data
+  image        String?  // Added image field
+  isFavorite   Boolean  @default(false)
+  isShared     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_recipes")
+}
+
+model GlobalRecipe {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  prepTime    String?
+  cookTime    String?
+  servings    Int?
+  difficulty  String?
+  ingredients String[] // Array of strings
+  instructions String[] // Array of strings
+  tags        String[] // Array of strings
+  nutrition   Json?    // JSON object for nutrition data
+  cuisine     String?
+  image       String?  // Added image field
+  rating      Float    @default(0)
+  viewCount   Int      @default(0)
+  shareCount  Int      @default(0)
+  
+  // New rating system fields
+  ratingCount     Int      @default(0)
+  ratingSum       Int      @default(0)
+  weightedRating  Float    @default(0)
+  lastRatingUpdate DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ratings RecipeRating[]
+
+  @@map("global_recipes")
+}
+
+model RecipeRating {
+  id        String   @id @default(cuid())
+  recipeId  String
+  userId    String
+  rating    Int      // 1-5 stars
+  viewTime  Int?     // Time spent viewing recipe in seconds
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  recipe GlobalRecipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  user   User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Ensure one rating per user per recipe
+  @@unique([recipeId, userId])
+  @@map("recipe_ratings")
+}
+
+model UserMealPlan {
+  id           String   @id @default(cuid())
+  userId       String
+  title        String?
+  startDate    DateTime
+  endDate      DateTime
+  days         Json     // JSON array of meal plan days
+  totalCalories Int?
+  shoppingList String[] // Array of shopping items
+  aiInsights   Json?    // JSON object for AI insights
+  preferences  Json?    // JSON object for user preferences
+  isFavorite   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_meal_plans")
+}
