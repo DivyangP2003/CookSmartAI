@@ -49,10 +49,11 @@ export async function POST(request) {
       },
     });
 
-    // Generate shareable link
-    const shareUrl = `${
-      process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-    }/explore`;
+    const { headers } = request;
+    const host = headers.get("host");
+    const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+
+    const shareUrl = `${protocol}://${host}/explore`;
 
     // Generate dynamic share content
     const shareContent = generateDynamicShareContent(

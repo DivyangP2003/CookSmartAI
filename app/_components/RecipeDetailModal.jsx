@@ -82,9 +82,7 @@ export default function RecipeDetailModal({
   };
 
   const handleShare = async () => {
-    const shareUrl = `${
-      process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-    }/explore`;
+    const shareUrl = window.location.href
 
     if (navigator.share) {
       try {
