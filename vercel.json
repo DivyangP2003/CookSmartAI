@@ -2,7 +2,7 @@
     "crons": [
         {
             "path": "/api/recipes/batch-update-ratings",
-            "schedule": "5 11 * * *"
+            "schedule": "20 11 * * *"
         }
     ]
 }
