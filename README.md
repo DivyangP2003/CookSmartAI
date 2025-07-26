@@ -3,7 +3,7 @@
 A fully responsive, AI-powered web app that helps users **generate recipes**, create **meal plans**, analyze **nutritional values**, and explore a global recipe library — all with AI-generated images and sharing capabilities.
 ---
 
-![Landing](./public/Landing_Page.png)
+![Landing](./public/demo_images/landing_page_hero.png)
 
 ---
 
@@ -86,19 +86,83 @@ All features are integrated into a **fully responsive**, cross-device compatible
 
 ## 📸 Screenshots
 
-| Landing Page | AI Recipe Generator |
-|--------------|--------------------|
-| ![Landing](./public/Landing_Page.png) | ![Recipe Generator](./public/Recipe_Generator.png) |
-
-| AI Meal Plan | Nutritional Calculator |
-|--------------|-----------------------|
-| ![Meal Plan](./public/Meal_Plan.png) | ![Nutrition](./public/Nutritional_Calculator.png) |
-
-| Explore Recipes | AI Image Scanner |
-|-----------------|------------------|
-| ![Explore](./public/Explore_Recipes.png) | ![Scanner](./public/Image_Scanner.png) |
+### 🌟 FullPage & ⭐ MyFavourites
+| FullPage | MyFavourites |
+|----------|--------------|
+| ![FullPage](./public/demo_images/FullPage.png) | ![MyFavourites](./public/demo_images/MyFavourites.png) |
 
 ---
+
+
+### 🔝 TopRecipes_HomePage & 🏠 landing_page_hero
+| TopRecipes_HomePage | landing_page_hero |
+|---------------------|------------------|
+| ![TopRecipes_HomePage](./public/demo_images/TopRecipes_HomePage.png) | ![landing_page_hero](./public/demo_images/landing_page_hero.png) |
+--- 
+
+
+### 🍳 Ai_RecipeGenerated & 🧾 Ai_Recipgenerator
+| Ai_RecipeGenerated | Ai_Recipgenerator |
+|--------------------|------------------|
+| ![Ai_RecipeGenerated](./public/demo_images/Ai_RecipeGenerated.png) | ![Ai_Recipgenerator](./public/demo_images/Ai_Recipgenerator.png) |
+
+---
+### 📷 Scanned Nutrition & 📷 Scanned recipe
+| Scanned Nutrition | Scanned recipe |
+|-------------------|----------------|
+| ![Scanned Nutrition](./public/demo_images/Scanned%20Nutrition.png) | ![Scanned recipe](./public/demo_images/Scanned%20recipe.png) |
+
+---
+
+### 📱 AllmageScanner & 🥗 RecipeCard
+| AllmageScanner | RecipeCard |
+|----------------|------------|
+| ![AllmageScanner](./public/demo_images/AllmageScanner.png) | ![RecipeCard](./public/demo_images/RecipeCard.png) |
+
+---
+
+### 🌍 ExploreWorldRecipe & 🧪 NutritionCalculator
+| ExploreWorldRecipe | NutritionCalculator |
+|--------------------|---------------------|
+| ![ExploreWorldRecipe](./public/demo_images/ExploreWorldRecipe.png) | ![NutritionCalculator](./public/demo_images/NutritionCalculator.png) |
+
+---
+
+### 📊 DetailedNutritionCard & 📈 AllinsightsNutrition
+| DetailedNutritionCard | AllinsightsNutrition |
+|-----------------------|----------------------|
+| ![DetailedNutritionCard](./public/demo_images/DetailedNutritionCard.png) | ![AllinsightsNutrition](./public/demo_images/AllinsightsNutrition.png) |
+
+---
+
+### 🧮 CalculatedNutrition & 🧾 PDF_MealPlan
+| CalculatedNutrition | PDF_MealPlan |
+|---------------------|--------------|
+| ![CalculatedNutrition](./public/demo_images/CalculatedNutrition.png) | ![PDF_MealPlan](./public/demo_images/PDF_MealPlan.png) |
+
+---
+
+### 🛒 ShoppingList_Meal & 🍽️ GeneratedMealPlan
+| ShoppingList_Meal | GeneratedMealPlan |
+|-------------------|------------------|
+| ![ShoppingList_Meal](./public/demo_images/ShoppingList_Meal.png) | ![GeneratedMealPlan](./public/demo_images/GeneratedMealPlan.png) |
+
+---
+
+### 🧠 MealPlanAllinsights & 🤖 Ai_MealPlannerPage
+| MealPlanAllinsights | Ai_MealPlannerPage |
+|---------------------|-------------------|
+| ![MealPlanAllinsights](./public/demo_images/MealPlanAllinsights.png) | ![Ai_MealPlannerPage](./public/demo_images/Ai_MealPlannerPage.png) |
+
+---
+
+### 📤 ShareRecipeDialog & 🎨 Ai_ImageRegeneration
+| ShareRecipeDialog | Ai_ImageRegeneration |
+|-------------------|---------------------|
+| ![ShareRecipeDialog](./public/demo_images/ShareRecipeDialog.png) | ![Ai_ImageRegeneration](./public/demo_images/Ai_ImageRegeneration.png) |
+
+---
+
 
 ## 🤸 Quick Start
 
