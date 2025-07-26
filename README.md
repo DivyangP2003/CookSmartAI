@@ -123,7 +123,7 @@ All features are integrated into a **fully responsive**, cross-device compatible
 ### 📱 AI ImageScanner & 🥗 Recipe Card
 | AI Image Scanner | Recipe Card |
 |----------------|------------|
-| ![AllmageScanner](./public/demo_images/AllmageScanner.png) | ![RecipeCard](./public/demo_images/RecipeCard.png) |
+| ![AllmageScanner](./public/demo_images/AI_ImageScanner.png) | ![RecipeCard](./public/demo_images/RecipeCard.png) |
 
 ---
 
