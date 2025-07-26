@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,6 +27,8 @@ import {
   Heart,
   Download,
   Lightbulb,
+  MapPin,
+  Globe,
   Apple,
   Carrot,
   Fish,
@@ -48,9 +50,17 @@ export default function MealPlanner() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [locationData, setLocationData] = useState(null);
 
   const { toast } = useToast();
 
+  useEffect(() => {
+    // Load location data from localStorage
+    const storedLocation = localStorage.getItem("userLocation");
+    if (storedLocation) {
+      setLocationData(JSON.parse(storedLocation));
+    }
+  }, []);
   const dietaryOptions = [
     "Vegetarian",
     "Vegan",
@@ -61,48 +71,6 @@ export default function MealPlanner() {
     "Low-Carb",
     "Mediterranean",
   ];
-
-  // // Icon mapping for ingredients
-  // const getIngredientIcon = (ingredient) => {
-  //   const item = ingredient.toLowerCase();
-  //   if (
-  //     item.includes("apple") ||
-  //     item.includes("fruit") ||
-  //     item.includes("berry")
-  //   )
-  //     return <Apple className="h-4 w-4 text-red-500" />;
-  //   if (
-  //     item.includes("carrot") ||
-  //     item.includes("vegetable") ||
-  //     item.includes("tomato")
-  //   )
-  //     return <Carrot className="h-4 w-4 text-orange-500" />;
-  //   if (
-  //     item.includes("fish") ||
-  //     item.includes("salmon") ||
-  //     item.includes("tuna")
-  //   )
-  //     return <Fish className="h-4 w-4 text-blue-500" />;
-  //   if (
-  //     item.includes("chicken") ||
-  //     item.includes("beef") ||
-  //     item.includes("meat")
-  //   )
-  //     return <Beef className="h-4 w-4 text-red-600" />;
-  //   if (
-  //     item.includes("bread") ||
-  //     item.includes("flour") ||
-  //     item.includes("pasta")
-  //   )
-  //     return <Wheat className="h-4 w-4 text-yellow-600" />;
-  //   if (
-  //     item.includes("milk") ||
-  //     item.includes("cheese") ||
-  //     item.includes("yogurt")
-  //   )
-  //     return <Milk className="h-4 w-4 text-blue-400" />;
-  //   return <Apple className="h-4 w-4 text-gray-500" />;
-  // };
 
   const handleDietaryChange = (option, checked) => {
     if (checked) {
@@ -127,6 +95,7 @@ export default function MealPlanner() {
           .map((a) => a.trim())
           .filter((a) => a),
         title: `${planDays}-Day Meal Plan`,
+        location: locationData, // Include location data
       };
 
       const response = await fetch("/api/meal-plans/generate", {
@@ -144,14 +113,16 @@ export default function MealPlanner() {
         setAiInsights(data.aiInsights);
         toast({
           title: "Success!",
-          description: "Meal plan generated successfully!",
-          variant: "success",
+          description: locationData
+            ? `Meal plan generated with ${locationData.city} local cuisine!`
+            : "Meal plan generated successfully!",
+          variant: "default",
         });
       } else {
         toast({
           title: "Error",
           description: data.error || "Failed to generate meal plan",
-          variant: "error",
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -159,7 +130,7 @@ export default function MealPlanner() {
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
-        variant: "error",
+        variant: "destructive",
       });
     } finally {
       setIsGenerating(false);
@@ -184,16 +155,15 @@ export default function MealPlanner() {
         toast({
           title: "Success!",
           description: data.message,
-          variant: "success",
+          variant: "default",
         });
-        setIsFavorite(data.isFavorite); // <-- Update local favorite state
-
+        setIsFavorite(data.isFavorite);
         setMealPlan((prev) => ({ ...prev, isFavorite: data.isFavorite }));
       } else {
         toast({
           title: "Error",
           description: data.error || "Failed to save meal plan",
-          variant: "error",
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -201,7 +171,7 @@ export default function MealPlanner() {
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
-        variant: "error",
+        variant: "destructive",
       });
     }
   };
@@ -229,6 +199,7 @@ export default function MealPlanner() {
               .split(",")
               .map((a) => a.trim())
               .filter((a) => a),
+            location: locationData,
           },
           aiInsights: aiInsights,
         }),
@@ -236,7 +207,6 @@ export default function MealPlanner() {
       const data = await response.json();
 
       if (data.success) {
-        // Create and download HTML file
         const blob = new Blob([data.htmlContent], { type: "text/html" });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -250,13 +220,13 @@ export default function MealPlanner() {
         toast({
           title: "Success!",
           description: "Meal plan downloaded successfully!",
-          variant: "success",
+          variant: "default",
         });
       } else {
         toast({
           title: "Error",
           description: data.error || "Failed to download meal plan",
-          variant: "error",
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -264,13 +234,12 @@ export default function MealPlanner() {
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
-        variant: "error",
+        variant: "destructive",
       });
     } finally {
       setIsDownloading(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
@@ -286,8 +255,37 @@ export default function MealPlanner() {
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Create personalized meal plans tailored to your preferences and
-            schedule
+            schedule {locationData && "with local cuisine recommendations"}
           </p>
+
+          {/* Location Display */}
+          {locationData && (
+            <div className="mt-6">
+              <Card className="max-w-md mx-auto border-green-200 bg-green-50">
+                <CardContent className="text-center py-4">
+                  <div className="flex items-center justify-center mb-2">
+                    <MapPin className="h-5 w-5 text-green-600 mr-2" />
+                    <span className="font-medium text-green-800">
+                      Local Cuisine & Timing Enabled
+                    </span>{" "}
+                  </div>
+                  <p className="text-sm text-green-700">
+                    {locationData.city}, {locationData.state},{" "}
+                    {locationData.country}
+                  </p>
+                  <p className="text-xs text-green-600 mt-1">
+                    Meal plans with local food styles, ingredients & meal
+                    timings
+                  </p>
+                  {locationData.timezone && (
+                    <p className="text-xs text-green-600">
+                      Timezone: {locationData.timezone}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -300,6 +298,7 @@ export default function MealPlanner() {
               </CardTitle>
               <CardDescription>
                 Customize your meal plan preferences
+                {locationData && " with local cuisine integration"}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -400,10 +399,29 @@ export default function MealPlanner() {
                 ) : (
                   <>
                     <Calendar className="h-4 w-4 mr-2" />
-                    Generate Meal Plan
+                    {locationData
+                      ? "Generate Local Meal Plan"
+                      : "Generate Meal Plan"}
                   </>
                 )}
               </Button>
+
+              {!locationData && (
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 mb-2">
+                    Want local cuisine recommendations?
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => (window.location.href = "/")}
+                    className="text-green-600 border-green-300 hover:bg-green-50"
+                  >
+                    <Globe className="h-4 w-4 mr-2" />
+                    Enable Location
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -418,6 +436,12 @@ export default function MealPlanner() {
                       <CardTitle className="flex items-center gap-2 text-blue-800">
                         <Lightbulb className="h-5 w-5" />
                         AI Insights
+                        {locationData && (
+                          <Badge variant="secondary" className="ml-2">
+                            <MapPin className="h-3 w-3 mr-1" />
+                            Local Cuisine & Timing
+                          </Badge>
+                        )}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -440,6 +464,26 @@ export default function MealPlanner() {
                             </p>
                           </div>
                         )}
+                        {aiInsights.localCuisineInsights && (
+                          <div>
+                            <p className="font-medium mt-3">
+                              Local Cuisine Integration:
+                            </p>
+                            <p className="text-sm">
+                              {aiInsights.localCuisineInsights}
+                            </p>
+                          </div>
+                        )}
+                        {aiInsights.mealTimingAnalysis && (
+                          <div>
+                            <p className="font-medium mt-3">
+                              Meal Timing Analysis:
+                            </p>
+                            <p className="text-sm">
+                              {aiInsights.mealTimingAnalysis}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -450,7 +494,18 @@ export default function MealPlanner() {
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div>
-                        <CardTitle>Your Meal Plan</CardTitle>
+                        <CardTitle className="flex items-center gap-2">
+                          Your Meal Plan
+                          {locationData && (
+                            <Badge
+                              variant="outline"
+                              className="text-green-600 border-green-300"
+                            >
+                              <MapPin className="h-3 w-3 mr-1" />
+                              {locationData.city}
+                            </Badge>
+                          )}
+                        </CardTitle>
                         <CardDescription>
                           {planDays} {planDays === "1" ? "day" : "days"} •{" "}
                           {mealPlan.totalCalories?.toLocaleString() || "N/A"}{" "}
@@ -513,6 +568,12 @@ export default function MealPlanner() {
                       {budget && (
                         <Badge variant="outline">${budget} Budget</Badge>
                       )}
+                      {locationData && (
+                        <Badge variant="outline" className="text-green-600">
+                          <Globe className="h-3 w-3 mr-1" />
+                          Local Cuisine
+                        </Badge>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -527,6 +588,12 @@ export default function MealPlanner() {
                           {day.date}
                         </span>
                       </CardTitle>
+                      {day.culturalInsight && locationData && (
+                        <CardDescription className="text-green-700 bg-green-50 p-2 rounded text-sm">
+                          <Globe className="h-3 w-3 inline mr-1" />
+                          {day.culturalInsight}
+                        </CardDescription>
+                      )}
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -548,9 +615,23 @@ export default function MealPlanner() {
                               <p className="text-gray-700 mb-2 font-medium">
                                 {meal.name}
                               </p>
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-gray-500 mb-2">
                                 {meal.calories} calories
                               </div>
+                              {meal.culturalNote && locationData && (
+                                <p className="text-xs text-green-600 bg-green-50 p-1 rounded">
+                                  {meal.culturalNote}
+                                </p>
+                              )}
+                              {meal.localCuisine && (
+                                <Badge
+                                  variant="outline"
+                                  className="mt-2 text-xs text-green-600 border-green-300"
+                                >
+                                  <Globe className="h-3 w-3 mr-1" />
+                                  Local Style
+                                </Badge>
+                              )}
                             </div>
                           )
                         )}
@@ -559,13 +640,14 @@ export default function MealPlanner() {
                   </Card>
                 ))}
 
-                {/* Shopping List with Icons */}
+                {/* Shopping List */}
                 {mealPlan.shoppingList && mealPlan.shoppingList.length > 0 && (
                   <Card className="shadow-lg">
                     <CardHeader>
                       <CardTitle>Shopping List</CardTitle>
                       <CardDescription>
                         Everything you need for your meal plan
+                        {locationData && " with local ingredients"}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -623,7 +705,8 @@ export default function MealPlanner() {
                     <Calendar className="h-16 w-16 mx-auto text-gray-300 mb-4" />
                     <p className="text-gray-500">
                       Configure your preferences and generate your personalized
-                      meal plan!
+                      meal plan
+                      {locationData && " with local cuisine recommendations"}!
                     </p>
                   </div>
                 </CardContent>

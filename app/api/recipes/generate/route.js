@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    // Check if user is authenticated
     const user = await checkUser();
     if (!user) {
       return NextResponse.json(
@@ -15,7 +14,10 @@ export async function POST(request) {
       );
     }
 
-    const { prompt } = await request.json();
+    // ✅ Read body only once
+    const requestBody = await request.json();
+    const { prompt, location } = requestBody;
+
     if (!prompt) {
       return NextResponse.json(
         { success: false, error: "Prompt is required" },
@@ -23,10 +25,12 @@ export async function POST(request) {
       );
     }
 
-    // Generate recipe using Gemini AI
-    const recipeData = await generateRecipe(prompt);
+    // ✅ Use location directly
+    const locationData = location || null;
 
-    // Generate image for the recipe
+    // Generate recipe using Gemini AI with location and time context
+    const recipeData = await generateRecipe(prompt, locationData);
+
     console.log("Generating image for recipe:", recipeData.title);
     const recipeImage = await generateRecipeImage(
       recipeData.title,
@@ -34,7 +38,6 @@ export async function POST(request) {
     );
     console.log("Generated image URL:", recipeImage);
 
-    // Save to user_recipes table with image
     const userRecipe = await prisma.userRecipe.create({
       data: {
         userId: user.id,
@@ -48,11 +51,14 @@ export async function POST(request) {
         instructions: recipeData.instructions,
         tags: recipeData.tags,
         nutrition: recipeData.nutrition,
-        image: recipeImage, // Add the generated image
+        image: recipeImage,
+        mealType: recipeData.mealType || null,
+        localAdaptation: recipeData.localAdaptation || null,
+        timeAppropriate: recipeData.timeAppropriate || null,
+        userLocation: locationData || null,
       },
     });
 
-    // Also save to global_recipes table with image
     await prisma.globalRecipe.create({
       data: {
         userId: user.id,
@@ -67,17 +73,19 @@ export async function POST(request) {
         tags: recipeData.tags,
         nutrition: recipeData.nutrition,
         cuisine: recipeData.cuisine || "International",
-        image: recipeImage, // Add the generated image
+        image: recipeImage,
+        mealType: recipeData.mealType || null,
+        localAdaptation: recipeData.localAdaptation || null,
+        userLocation: locationData || null,
       },
     });
-
 
     return NextResponse.json({
       success: true,
       recipe: {
         id: userRecipe.id,
         ...recipeData,
-        image: recipeImage, // Include image in response
+        image: recipeImage,
       },
     });
   } catch (error) {

@@ -3,7 +3,6 @@ import { generateMealPlan, generateMealPlanInsights } from "@/lib/gemini"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
-
 export async function POST(request) {
   try {
     const user = await checkUser()
@@ -16,10 +15,10 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: "Preferences are required" }, { status: 400 })
     }
 
-    // Generate meal plan using Gemini AI
+    // Generate meal plan using Gemini AI with location data
     const mealPlanData = await generateMealPlan(preferences)
 
-    // Generate AI insights
+    // Generate AI insights with location context
     const aiInsights = await generateMealPlanInsights(mealPlanData, preferences)
 
     // Calculate date range
@@ -27,8 +26,8 @@ export async function POST(request) {
     const endDate = new Date()
     endDate.setDate(startDate.getDate() + Number.parseInt(preferences.days || 7))
 
-    // Save to user_meal_plans table
-    const userMealPlan = await prisma   .userMealPlan.create({
+    // Save to user_meal_plans table with location data
+    const userMealPlan = await prisma.userMealPlan.create({
       data: {
         userId: user.id,
         title: preferences.title || `${preferences.days || 7}-Day Meal Plan`,
@@ -37,7 +36,10 @@ export async function POST(request) {
         days: mealPlanData.days,
         totalCalories: mealPlanData.totalCalories,
         shoppingList: mealPlanData.shoppingList,
-        preferences: preferences,
+        preferences: {
+          ...preferences,
+          location: preferences.location || null, // Store location data
+        },
         aiInsights: aiInsights, // Store AI insights
       },
     })

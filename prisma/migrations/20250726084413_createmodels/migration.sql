@@ -29,6 +29,11 @@ CREATE TABLE "user_recipes" (
     "image" TEXT,
     "isFavorite" BOOLEAN NOT NULL DEFAULT false,
     "isShared" BOOLEAN NOT NULL DEFAULT false,
+    "mealType" TEXT,
+    "localAdaptation" TEXT,
+    "timeAppropriate" TEXT,
+    "userLocation" JSONB,
+    "cuisine" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -58,6 +63,9 @@ CREATE TABLE "global_recipes" (
     "ratingSum" INTEGER NOT NULL DEFAULT 0,
     "weightedRating" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "lastRatingUpdate" TIMESTAMP(3),
+    "mealType" TEXT,
+    "localAdaptation" TEXT,
+    "userLocation" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

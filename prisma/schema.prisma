@@ -50,6 +50,14 @@ model UserRecipe {
   image        String?  // Added image field
   isFavorite   Boolean  @default(false)
   isShared     Boolean  @default(false)
+  
+  // NEW LOCATION-AWARE FIELDS
+  mealType        String?  // breakfast, lunch, dinner, snack, etc.
+  localAdaptation String?  // Brief note about local adaptation
+  timeAppropriate String?  // Why this recipe is suitable for the time
+  userLocation    Json?    // JSON object storing user's location data
+  cuisine         String?  // Cuisine type (local or requested)
+  
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -83,6 +91,11 @@ model GlobalRecipe {
   ratingSum       Int      @default(0)
   weightedRating  Float    @default(0)
   lastRatingUpdate DateTime?
+  
+  // NEW LOCATION-AWARE FIELDS
+  mealType        String?  // breakfast, lunch, dinner, snack, etc.
+  localAdaptation String?  // Brief note about local adaptation
+  userLocation    Json?    // JSON object storing user's location data when created
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -122,7 +135,7 @@ model UserMealPlan {
   totalCalories Int?
   shoppingList String[] // Array of shopping items
   aiInsights   Json?    // JSON object for AI insights
-  preferences  Json?    // JSON object for user preferences
+  preferences  Json?    // JSON object for user preferences (already includes location)
   isFavorite   Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
