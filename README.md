@@ -41,12 +41,7 @@ All features are integrated into a **fully responsive**, cross-device compatible
   - Number of days, people, budget  
   - Dietary preferences & allergies  
   - Get AI insights, nutrition details, shopping list  
-  - Download or save meal plans
-    
--🕑 **Location & Time Zone Aware Suggestions**  
-  - Detects your **current location & time zone**  
-  - Recommends **local cuisine & diet-specific meals**  
-  - Adjusts meal times based on **regional eating patterns**
+  - Download or save meal plans  
 
 - 🧪 **AI Nutritional Calculator**  
   - Input ingredients or recipe description  
@@ -66,11 +61,16 @@ All features are integrated into a **fully responsive**, cross-device compatible
   - View all user-submitted recipes  
   - Advanced filters, search & global rating system  
 
+- 🕑 **Location & Time Zone Aware Suggestions**  
+  - Detects your **current location & time zone**  
+  - Recommends **local cuisine & diet-specific meals**  
+  - Adjusts meal times based on **regional eating patterns**
+
 - 📈 **Ratings System**  
   - Standard Weighted global rating updates daily via CRON job  
 
 - 📄 **Additional Pages**  
-  - About, Contact, Careers, Blog, Privacy Policy  
+  - About, Contact, Careers, Blog, Privacy Policy
 
 ---
 
