@@ -25,6 +25,7 @@ import {
 import TopRecipes from "./_components/TopReceipes";
 import { useEffect, useState } from "react";
 import { useToast } from "./_components/ui/use-toast";
+import Chatbot from "./_components/chat-bot/chatbot";
 
 export default function HomePage() {
   const [locationStatus, setLocationStatus] = useState("not_requested"); // not_requested, requesting, granted, denied, error
@@ -418,6 +419,10 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+
+      {/* Floating Chatbot */}
+      <Chatbot />
     </div>
   );
 }
